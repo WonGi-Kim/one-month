@@ -1,5 +1,4 @@
 jwt:
-  # base64 인코딩
   key: 7ZWc64us7J247YS07Jio67O065Sp6rO87KCc7J6F64uI64ukLg==
   access-expire-time: 180000000000
   refresh-expire-time: 120960000000000
