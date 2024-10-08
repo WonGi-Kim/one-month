@@ -1,0 +1,32 @@
+jwt:
+  # base64 인코딩
+  key: 7ZWc64us7J247YS07Jio67O065Sp6rO87KCc7J6F64uI64ukLg==
+  access-expire-time: 180000000000
+  refresh-expire-time: 120960000000000
+
+spring:
+  main:
+    allow-bean-definition-overriding: true
+  application:
+    name: one-month
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/one-month
+    username: root
+    password: password
+  servlet:
+    multipart:
+      enabled: true
+      max-file-size: 10MB
+      max-request-size: 10MB
+
+  jpa:
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        show_sql: true
+        format_sql: true
+        highlight_sql: true
+        use_sql_comments: true
+    database-platform: org.hibernate.dialect.MySQLDialect
