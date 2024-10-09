@@ -42,20 +42,22 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response,
                                     FilterChain filterChain) throws ServletException, IOException {
 
-        String path = request.getRequestURI();
+        String requestURI = request.getRequestURI();
 
-        // GET 요청의 /users/profile/** 경로 필터링 제외
-        if ("GET".equalsIgnoreCase(request.getMethod())) {
-            String headerValue = request.getHeader("Authorization");
-            if (headerValue == null) {
-                filterChain.doFilter(request, response);
-                return;
-            }
+        // /users/signup과 /users/sign 경로의 요청은 Authorization 헤더가 없어도 허용
+        if ("/users/signup".equals(requestURI) || "/users/sign".equals(requestURI)) {
+            filterChain.doFilter(request, response);
+            return;
+        }
+
+        // GET 요청의 경우 Authorization 헤더가 없으면 필터링 제외
+        if ("GET".equalsIgnoreCase(request.getMethod()) && request.getHeader(AUTHORIZATION_HEADER) == null) {
+            filterChain.doFilter(request, response);
+            return;
         }
 
         try {
             String tokenValue = jwtUtil.extractBearerTokenFromHeader(request, AUTHORIZATION_HEADER);
-
             jwtUtil.validateToken(tokenValue);
 
             String userId = jwtUtil.getUsernameFromToken(tokenValue);
@@ -70,28 +72,22 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             handleException(response, "Authentication Error: " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
             return;
         }
-        filterChain.doFilter(request,response);
 
+        filterChain.doFilter(request, response);
     }
 
-    public void setAuthentication(String userId, UserRole role) {
+    private void setAuthentication(String userId, UserRole role) {
         SecurityContext context = SecurityContextHolder.createEmptyContext();
         Authentication authentication = createAuthentication(userId, role);
         context.setAuthentication(authentication);
-
         SecurityContextHolder.setContext(context);
     }
 
     private Authentication createAuthentication(String userId, UserRole role) {
         UserDetails userDetails = userDetailsService.loadUserByUsername(userId);
-        Collection<? extends GrantedAuthority> authorities = getAuthorities(role);
+        Collection<? extends GrantedAuthority> authorities = Collections.singletonList(new SimpleGrantedAuthority(role.name()));
         return new UsernamePasswordAuthenticationToken(userDetails, null, authorities);
     }
-
-    private Collection<? extends GrantedAuthority> getAuthorities(UserRole role) {
-        return Collections.singletonList(new SimpleGrantedAuthority(role.name()));
-    }
-
 
     private void handleException(HttpServletResponse res, String message, HttpStatus httpStatus) throws IOException {
         res.setStatus(httpStatus.value());
@@ -106,10 +102,8 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                 .build();
 
         ObjectMapper mapper = new ObjectMapper();
-        JavaTimeModule javaTimeModule = new JavaTimeModule();
-        javaTimeModule.addSerializer(LocalDateTime.class, new LocalDateTimeSerializer(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
-        mapper.registerModule(javaTimeModule);
-
+        mapper.registerModule(new JavaTimeModule()); // JavaTimeModule 추가
         res.getWriter().write(mapper.writeValueAsString(errorResponse));
     }
 }
+

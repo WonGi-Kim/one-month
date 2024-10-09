@@ -49,7 +49,7 @@ public class JwtUtil {
     }
 
     public String createToken(String userName, UserRole userRole, long tokenExpiration) {
-        return Jwts.builder()
+        return BEARER + Jwts.builder()
                 .setSubject(userName) // 토큰 발행 주체
                 .claim(AUTHORIZATION, userRole.name())
                 .setIssuedAt(new Date())
