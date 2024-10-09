@@ -21,6 +21,9 @@ public class UserService {
     public SignUpResponseDto createUser(SignUpRequestDto requestDto) {
 
         String password = passwordEncoder.encode(requestDto.getPassword());
+        if(userRepository.findByUsername(requestDto.getUsername()).isPresent()) {
+            throw new CustomException(ErrorCode.USER_ALREADY_EXIST);
+        }
 
         // User 객체 생성
         User user = User.builder()
