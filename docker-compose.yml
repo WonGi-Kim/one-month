@@ -1,14 +1,27 @@
+version: '3.8'
+
 services:
-  db:
-    platform: linux/x86_64
-    image: mysql
-    container_name: one-month
-    restart: always
-    ports:
-      - "3306:3306"
+  mysql:
+    image: mysql:latest
     environment:
       MYSQL_ROOT_PASSWORD: password
-      MYSQL_ROOT_USER: root
       MYSQL_DATABASE: one-month
+      MYSQL_USER: root
       MYSQL_PASSWORD: password
-      TZ: Asia/Seoul
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+
+  springboot:
+    image: one-month
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "8080:8080"
+    depends_on:
+      - mysql
+
+volumes:
+  mysql_data:

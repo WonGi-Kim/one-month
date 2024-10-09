@@ -35,3 +35,7 @@ out/
 
 ### VS Code ###
 .vscode/
+
+### AWS EC2 ###
+baba1235.pem
+onemonth-key-pair.pem
