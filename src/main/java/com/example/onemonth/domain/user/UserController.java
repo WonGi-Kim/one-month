@@ -24,7 +24,7 @@ public class UserController {
         return ResponseEntity.ok(response);
     }
 
-    @GetMapping("/users/sign")
+    @PostMapping("/users/sign")
     public ResponseEntity<CommonResponse> signUser(@RequestBody SignRequestDto requestDto) {
         SignResponseDto responseDto = userService.signUser(requestDto);
         CommonResponse response = new CommonResponse<>("로그인 성공", 200, responseDto);

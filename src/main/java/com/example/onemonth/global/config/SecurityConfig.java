@@ -56,7 +56,9 @@ public class SecurityConfig {
                 authorizeHttpRequests
                         .requestMatchers(PathRequest.toStaticResources().atCommonLocations()).permitAll()
                         .requestMatchers(HttpMethod.POST, "/users/signup").permitAll()
-                        .requestMatchers(HttpMethod.GET, "/users/sign").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/users/sign").permitAll()
+                        .requestMatchers("/v3/api-docs/**").permitAll() // Swagger API docs 허용
+                        .requestMatchers("/swagger-ui/**").permitAll() // Swagger UI 허용
                         .anyRequest().authenticated()
         );
 
