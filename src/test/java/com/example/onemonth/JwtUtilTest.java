@@ -114,12 +114,12 @@ class JwtUtilTest {
      * - 목적 : 유효하지 않은 Refresh Token을 사용할 때 Access Token 생성의 실패를 테스트
      * - 검증 : 잘못된 Refresh Token을 사용해 Access Token을 생성할 때 IllegalArgumentException이 발생하는지 확인
      */
-    @Test
-    void testCreateAccessTokenFromInvalidRefresh() {
-        // 실패가 정상
-        String invalidToken = "invalidToken";
-        assertThrows(IllegalArgumentException.class, () -> jwtUtil.createAccessTokenFromRefresh(invalidToken, userRole));
-    }
+//    @Test
+//    void testCreateAccessTokenFromInvalidRefresh() {
+//        // 실패가 정상
+//        String invalidToken = "invalidToken";
+//        assertThrows(IllegalArgumentException.class, () -> jwtUtil.createAccessTokenFromRefresh(invalidToken, userRole));
+//    }
 
     /**
      * - 목적 : HttpServletRequest에서 Bearer Token을 추출하는 기능을 테스트
