@@ -12,8 +12,8 @@ spring:
     driver-class-name: com.mysql.cj.jdbc.Driver
     url: jdbc:mysql://mysql:3306/one-month  # localhost 대신 mysql 사용
     # url: jdbc:mysql://localhost:3306/one-month
-    username: root
-    password: password
+    username: myuser
+    password: mypassword
   servlet:
     multipart:
       enabled: true
